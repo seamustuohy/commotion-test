@@ -1,0 +1,22 @@
+============================
+Dependencies:
+============================
+* Python 2.6-7
+
+============================
+How to run tests:
+=============================
+python run_tests.py [flags]
+
+
+============================
+Flags:
+============================
+-s [option]
+Suite:This flag chooses a specific test suite. Currently only "all" is implemented
+
+-v [level]
+Verbose: This flag sets the verbosity level to 2. This will show passed tests in the log file. Otherwise only failed tests and standard metric output is shown in the logfiles.
+
+-l [name]
+LogFile: This flag will allow you to choose a non-standard logfile name.

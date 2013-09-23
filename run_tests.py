@@ -5,9 +5,22 @@ Evaluation tests for Commotion Networks.
 
 import unittest
 import time
+import logging
+import sys
+import os
 
 from tests import test_connection
 from tests import test_load
+
+def create_metric_dir():
+	num = 1
+        date_string = time.strftime("%Y-%m-%d")
+	metric_dir = "logs/"+date_string+"("+str(num)+")"
+	while os.path.isdir(metric_dir):
+                num += 1
+                metric_dir = "logs/"+date_string+"("+str(num)+")"
+        os.makedirs(metric_dir, 0x1C0)
+        return metric_dir
 
 def create_runner(suite_type, verbosity_level=None, runner_type="text"):
     """creates a testing runner.
@@ -15,14 +28,15 @@ def create_runner(suite_type, verbosity_level=None, runner_type="text"):
     suite_type: (string) suites to run [acceptable values = suite_types in build_suite()]
     runner_type: (string) type of runner to create. [implemented values = 'text']
     """
+    metric_dir = create_metric_dir()
     f = None
     if runner_type == "text":
         runner = unittest.TextTestRunner(verbosity=verbosity_level)
     else:
-        date_string = time.strftime("%Y-%m-%d-%H-%M")
-        log_file = "logs/"+runner_type+date_string
+        log_file = metric_dir+"/testSuite"
         f = open(log_file, "w")
         runner = unittest.TextTestRunner(f, verbosity=verbosity_level)
+    print("LOGFILE: -> "+metric_dir)
     test_suite = build_suite(suite_type)
     runner.run (test_suite)
     if f:
@@ -34,7 +48,8 @@ def build_suite(suite_type):
     for test_case in suite_types[suite_type]:
         suite.addTest (unittest.makeSuite(test_case))
     return suite
-        
+
+
 if __name__ == '__main__':
     """Creates argument parser for required arguments and calls test runner"""
     import argparse
