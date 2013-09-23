@@ -4,6 +4,7 @@ Evaluation tests for Commotion Networks.
 """
 
 import unittest
+import time
 
 from tests import test_connection
 from tests import test_load
@@ -18,9 +19,10 @@ def create_runner(suite_type, verbosity_level=None, runner_type="text"):
     if runner_type == "text":
         runner = unittest.TextTestRunner(verbosity=verbosity_level)
     else:
-        log_file = "/var/log/commotion_test.log"
-        f = open(log_file, "W")
-        runner = unittest.TextTestRunner(f)
+        date_string = time.strftime("%Y-%m-%d-%H-%M")
+        log_file = "logs/"+runner_type+date_string
+        f = open(log_file, "w")
+        runner = unittest.TextTestRunner(f, verbosity=verbosity_level)
     test_suite = build_suite(suite_type)
     runner.run (test_suite)
     if f:
