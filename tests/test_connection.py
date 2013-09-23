@@ -1,13 +1,15 @@
 import unittest
 import subprocess
+import sys
 import os, time  #setUp and tearDown requirements
-from . import ssh
-
+from util import ssh
+from util import get_target
 
 class testFunctions(unittest.TestCase):
 
     def setUp(self):
-        config = open("../config", "r")
+        #get config file
+        
 	num = 1
         date_string = time.strftime("%Y-%m-%d")
 	metric_dir = "logs/"+date_string+"("+str(num)+")"
@@ -20,19 +22,24 @@ class testFunctions(unittest.TestCase):
         self.log.close()
 
     def test_ping_time(self):
+        fail = False
         destinations = ["8.8.8.8", "127.0.0.1"]
-        print("working")
+        network_devices = get_target.get_all()
+        for i in network_devices:
+            destinations.append(i[1])
         for ping_dest in destinations:
-            ping = subprocess.Popen(["ping", "-c", "4", ping_dest], stdout=subprocess.PIPE)
-            tail = subprocess.Popen(["tail", "-1"], stdin=ping.stdout, stdout=subprocess.PIPE)
-            awk = subprocess.Popen(["awk", "{print $4}"], stdin=tail.stdout, stdout=subprocess.PIPE)
-            cut = subprocess.Popen(["cut", "-d", "/",  "-f", "2"], stdin=awk.stdout, stdout=subprocess.PIPE)
-            result = cut.communicate()[0]
-            result=float(result[0:-1]) #remove the new line
-            self.log.write("Average ping time to "+ping_dest+" "+str(result)+"\n")
-        #assert it is not instant :) e.g. were getting a result 
-            self.assertGreater(result, 0)
-
-
-
-    
+            ping = subprocess.Popen(["ping", "-c", "4", ping_dest], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            tail = subprocess.Popen(["tail", "-1"], stdin=ping.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)            
+            awk = subprocess.Popen(["awk", "{print $4}"], stdin=tail.stdout, stdout=subprocess.PIPE, stderr=sys.stdout.fileno())
+            test_set = awk.communicate()[0][0:-2]
+            l = test_set.split("/")
+            total = None
+            if len(l) != 1:
+                nums = [float(n) for n in l]
+                total = sum(nums) / float(len(nums))
+            if total:
+                self.log.write("Average ping time to "+ping_dest+" was "+str(total)+" seconds\n")
+            else:
+                fail = True
+                self.log.write(ping_dest+" could not be reached\n")
+        self.assertFalse(fail)
