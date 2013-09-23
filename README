@@ -20,3 +20,16 @@ Verbose: This flag sets the verbosity level to 2. This will show passed tests in
 
 -l [name]
 LogFile: This flag will allow you to choose a non-standard logfile name.
+
+
+============================
+Config File:
+============================
+should be in the location:
+commotion-test/config
+should have the following format:
+node=123.546.789.10
+server=867.530.9.0
+server=777.777.777.777
+node=666.666.666.666
+
