@@ -33,3 +33,29 @@ server=867.530.9.0
 server=777.777.777.777
 node=666.666.666.666
 
+
+=============================
+To Create a new test set: Copy this bare unittest into your code and go from there.
+============================
+
+import unittest
+import os, time  #setUp and tearDown requirements
+
+class testFunctions(unittest.TestCase):
+
+    def setUp(self):
+	num = 1
+        date_string = time.strftime("%Y-%m-%d")
+	metric_dir = "logs/"+date_string+"("+str(num)+")"
+	while os.path.isdir("logs/"+date_string+"("+str(num+1)+")"):
+            num += 1
+            metric_dir = "logs/"+date_string+"("+str(num)+")"
+        self.log = open(metric_dir+"/THIS_IS_THE_METRIC_FILE_NAME_YOU_WANT", "a")
+
+    def tearDown(self):
+        self.log.close()
+
+    def test_A_thing(self):
+
+    self.log.write("This is how you write to the metrics file")
+	#Note: Don't write any unittest assertions that may fail with one, but not all devices. Run your assertion tests after getting the metric data from your nodes so that a failure does not halt the metric gathering. 
