@@ -11,6 +11,8 @@ import os
 
 from tests import test_connection
 from tests import test_load
+from tests import test_leases
+from tests import test_iperf
 
 def create_metric_dir():
 	num = 1
@@ -44,7 +46,13 @@ def create_runner(suite_type, verbosity_level=None, runner_type="text"):
 
 def build_suite(suite_type):
     suite = unittest.TestSuite()
-    suite_types = {"all": [test_connection.testFunctions, test_load.testFunctions], "connection":[test_connection.testFunctions]}
+    suite_types = {"iperf": [test_iperf.testFunctions],
+                   "lease": [test_leases.testFunctions],
+                   "connection": [test_connection.testFunctions],
+                   "all": [test_iperf.testFunctions,
+                           test_leases.testFunctions,
+                           test_connection.testFunctions,
+                           test_load.testFunctions]}
     for test_case in suite_types[suite_type]:
         suite.addTest (unittest.makeSuite(test_case))
     return suite
