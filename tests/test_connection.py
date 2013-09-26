@@ -8,8 +8,6 @@ from util import get_target
 class testFunctions(unittest.TestCase):
 
     def setUp(self):
-        #get config file
-        
 	num = 1
         date_string = time.strftime("%Y-%m-%d")
 	metric_dir = "logs/"+date_string+"("+str(num)+")"
@@ -17,6 +15,7 @@ class testFunctions(unittest.TestCase):
             num += 1
             metric_dir = "logs/"+date_string+"("+str(num)+")"
         self.log = open(metric_dir+"/connection", "a")
+        self.log.write(time.strftime("Test Time: %Y-%m-%d %H:%M:%S"))
 
     def tearDown(self):
         self.log.close()
@@ -43,3 +42,5 @@ class testFunctions(unittest.TestCase):
                 fail = True
                 self.log.write(ping_dest+" could not be reached\n")
         self.assertFalse(fail)
+
+    

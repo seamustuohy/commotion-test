@@ -12,16 +12,18 @@ class testFunctions(unittest.TestCase):
             num += 1
             metric_dir = "logs/"+date_string+"("+str(num)+")"
         self.log = open(metric_dir+"/load", "a")
+        self.log.write(time.strftime("Test Time: %Y-%m-%d %H:%M:%S"))
 
     def tearDown(self):
         self.log.close()
     
     def test_throughput(self):
-        """ """
+        """iperf """
         self.log.write("PINEAPPLE")
         pass
     
     def test_jitter(self):
+        """ """
         self.log.write("PINEAPPLE")
         pass
     
@@ -36,5 +38,7 @@ class testFunctions(unittest.TestCase):
     def test_capacity(self):
         self.log.write("PINEAPPLE")
         pass
+
+    
 
 

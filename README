@@ -51,6 +51,7 @@ class testFunctions(unittest.TestCase):
             num += 1
             metric_dir = "logs/"+date_string+"("+str(num)+")"
         self.log = open(metric_dir+"/THIS_IS_THE_METRIC_FILE_NAME_YOU_WANT", "a")
+		self.log.write(time.strftime("Test Time: %Y-%m-%d %H:%M:%S"))
 
     def tearDown(self):
         self.log.close()
