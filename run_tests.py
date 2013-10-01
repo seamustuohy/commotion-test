@@ -50,7 +50,7 @@ def build_suite(suite_type):
             "iperf": [test_iperf.testFunctions],
             "lease": [test_leases.testFunctions],
             "connection": [test_connection.testFunctions],
-            "all": [test_iperf.testFunctions,
+            "all": [#test_iperf.testFunctions,
                     test_leases.testFunctions,
                     test_connection.testFunctions]}
     for test_case in suite_types[suite_type]:

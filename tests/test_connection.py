@@ -45,7 +45,7 @@ class testFunctions(unittest.TestCase):
 
     def test_sockets(self):
         network_devices = get_target.get_all()
-        for i in network_devices:
+        for device in network_devices:
             output = ssh.ssh("root", device[1], "netstat --statistics")
             self.log.write(output)
         myNetStat = subprocess.Popen(["netstat", "--statistics"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -53,7 +53,7 @@ class testFunctions(unittest.TestCase):
 
     def test_jsonInfo(self):
         network_devices = get_target.get_all()
-        for i in network_devices:
+        for device in network_devices:
             if device[0] == "node":
                 output = ssh.ssh("root", device[1], "curl -d http://127.0.0.1:9090/all/")
                 self.log.write(output)
