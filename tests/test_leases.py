@@ -24,8 +24,9 @@ class testFunctions(unittest.TestCase):
         fail = False
         network_devices = get_target.get_all()
         for device in network_devices:
-            output = ssh.ssh("root", device[1], "ndsctl status")
-            self.log.write(output)
+            if device[0] == "node":
+                      output = ssh.ssh("root", device[1], "ndsctl status")
+                      self.log.write(output)
         self.assertFalse(fail)
 
     
