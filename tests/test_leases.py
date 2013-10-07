@@ -28,5 +28,3 @@ class testFunctions(unittest.TestCase):
                       output = ssh.ssh("root", device[1], "ndsctl status")
                       self.log.write(output)
         self.assertFalse(fail)
-
-    

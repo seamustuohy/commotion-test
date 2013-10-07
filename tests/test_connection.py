@@ -27,6 +27,7 @@ class testFunctions(unittest.TestCase):
         for i in network_devices:
             destinations.append(i[1])
         for ping_dest in destinations:
+            print("ping starting on "+str(ping_dest))
             ping = subprocess.Popen(["ping", "-c", "4", ping_dest], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             tail = subprocess.Popen(["tail", "-1"], stdin=ping.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             awk = subprocess.Popen(["awk", "{print $4}"], stdin=tail.stdout, stdout=subprocess.PIPE, stderr=sys.stdout.fileno())
@@ -37,7 +38,8 @@ class testFunctions(unittest.TestCase):
                 nums = [float(n) for n in l]
                 total = sum(nums) / float(len(nums))
             if total:
-                self.log.write("Average ping time to "+ping_dest+" was "+str(total)+" seconds\n")
+                self.log.write("Average ping time to "+ping_dest+" was "+str(total)+" mili-seconds\n")
+                print("Average ping time to "+ping_dest+" was "+str(total)+" mili-seconds\n")
             else:
                 fail = True
                 self.log.write(ping_dest+" could not be reached\n")
@@ -46,18 +48,19 @@ class testFunctions(unittest.TestCase):
     def test_sockets(self):
         network_devices = get_target.get_all()
         for device in network_devices:
-            output = ssh.ssh("root", device[1], "netstat --statistics")
+            print("getting netstat for device "+device[1])
+            output = ssh.ssh("root", device[1], "netstat -a")
             self.log.write(output)
-        myNetStat = subprocess.Popen(["netstat", "--statistics"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        myNetStat = subprocess.Popen(["netstat", "-a"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         self.log.write(myNetStat.communicate()[0])
-
-    def test_jsonInfo(self):
+#TODO TURN ON
+"""    def test_jsonInfo(self):
         network_devices = get_target.get_all()
         for device in network_devices:
             if device[0] == "node":
                 output = ssh.ssh("root", device[1], "curl -d http://127.0.0.1:9090/all/")
                 self.log.write(output)
-
+"""
 
 
          

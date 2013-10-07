@@ -8,7 +8,7 @@ from util import get_target
 from util import stress
 
 def start_iperf(host):
-    start = ssh.ssh("root", host, "iperf --server --daemon --udp > /dev/null 2>&1")
+    start = ssh.ssh("root", host, "iperf --server --daemon > /dev/null 2>&1")
 
 def stop_iperf(host):
     stop = ssh.ssh("root", host, "kill -9 `pgrep iperf`")
@@ -33,12 +33,18 @@ class testFunctions(unittest.TestCase):
         fail = False
         network_devices = get_target.get_all()
         for device in network_devices:
+            print("Destination: " + device[1] + "\n")
             self.log.write("Destination: " + device[1] + "\n")
+            print("starting iperf on server")
             start_iperf(device[1])
+            print("running traceroute on server")
             traceroute = subprocess.Popen(["traceroute", "-n", device[1]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            iperf = subprocess.Popen(["iperf", "--client", "--udp", device[1]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            print("starting iperf on client")            
+            iperf = subprocess.Popen(["iperf", "--client", device[1]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            print("logging")            
             self.log.write(traceroute.communicate()[0])
             self.log.write(iperf.communicate()[0])
+            print("stopping iperf on server")
             stop_iperf(device[1])
         self.assertFalse(fail)
 
