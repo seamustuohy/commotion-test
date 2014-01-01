@@ -1,3 +1,6 @@
+This suite will allow you to define a set of nodes and servers running commotion to get some basic info about their status from a central point. This test suite should be run from the same point on the network every time to get consistant results.  You should also gather the network configuration information from whatever ad-hoc protocol you are using furing each test. If you don't gather network configuration information as well the results will be very hard to parse after the fact. (I also suggest making a pysical map of the space with notes about the materials and barriers between the nodes to give context when you look back at this data.)
+
+
 ============================
 Dependencies:
 ============================
